@@ -147,7 +147,7 @@ public class ApiConfig {
                 callback.error("源地址为空");
                 return;
             }
-            String safe = liveFallback.replace("\\", "\\\\").replace(""", "\\\"");
+            String safe = liveFallback.replace("\\", "\\\\").replace("\"", "\\\"");
             String miniJson = "{\"sites\":[],\"lives\":[{\"name\":\"直播\",\"url\":\"" + safe + "\",\"type\":\"0\"}],\"parses\":[],\"flags\":[]}";
             parseJson(liveFallback, miniJson);
             callback.success();
