@@ -141,7 +141,16 @@ public class ApiConfig {
         // Embedded Source : Update in Strings.xml if required
         String apiUrl = Hawk.get(HawkConfig.API_URL, HomeActivity.getRes().getString(R.string.app_source));
         if (apiUrl.isEmpty()) {
-            callback.error("源地址为空");
+            // tubepm-patch: 数据源为空时回退到设置里手填的直播源地址（直播可用；点播列表为空，需填数据源才有）
+            String liveFallback = Hawk.get(HawkConfig.LIVE_URL, "");
+            if (liveFallback.isEmpty()) {
+                callback.error("源地址为空");
+                return;
+            }
+            String safe = liveFallback.replace("\\", "\\\\").replace(""", "\\\"");
+            String miniJson = "{\"sites\":[],\"lives\":[{\"name\":\"直播\",\"url\":\"" + safe + "\",\"type\":\"0\"}],\"parses\":[],\"flags\":[]}";
+            parseJson(liveFallback, miniJson);
+            callback.success();
             return;
         }
         File cache = new File(App.getInstance().getFilesDir().getAbsolutePath() + "/" + MD5.encode(apiUrl));
