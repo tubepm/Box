@@ -99,8 +99,9 @@ public class ApiDialog extends BaseDialog {
                         history.remove(20);
                     Hawk.put(HawkConfig.API_HISTORY, history);
                     listener.onchange(newApi);
-                    dismiss();
                 }
+                // tubepm-patch: 第1栏为空时也能关闭弹窗（原dismiss被锁在非空判断内，只填第2栏时点确定弹窗不消失）
+                dismiss();
                 // Capture Live input into Settings & Live History (max 20)
                 Hawk.put(HawkConfig.LIVE_URL, newLive);
                 if (!newLive.isEmpty()) {
